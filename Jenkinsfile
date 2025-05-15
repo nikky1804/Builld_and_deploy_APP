@@ -18,7 +18,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/komal-max/Builld_and_deploy_APP.git'      
+                git branch: 'main', url: 'https://github.com/nikky1804/Builld_and_deploy_APP.git'      
                 }
         }
         stage('Code Compile') {
@@ -36,9 +36,9 @@ pipeline {
         stage('Sonarqube Analysis') {
             steps {
                 withSonarQubeEnv('Sonarqube-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Petclinic \
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Pipeline-Project \
                     -Dsonar.java.binaries=. \
-                    -Dsonar.projectKey=Petclinic '''
+                    -Dsonar.projectKey=Pipeline-Project '''
     
                 }  
              }
@@ -66,8 +66,8 @@ pipeline {
         stage('Docker build') {
             steps {
                 script {
-                    sh 'docker build -t petclinic-new .'
-                    sh 'docker tag petclinic-new komalminhas1/pet-1:latest'
+                    sh 'docker build -t project-new .'
+                    sh 'docker tag project-new nikky1804/pro-1:latest'
                    
                     }
                 
@@ -77,7 +77,7 @@ pipeline {
         stage('Trivy Scan') {
             steps {
                 script {
-                    sh 'trivy image komalminhas1/pet-1:latest'
+                    sh 'trivy image nikky1804/pro-1:latest'
                 }
             }
         }
@@ -89,7 +89,7 @@ pipeline {
             stage('Docker push') {
             steps {
                 script {
-                    sh 'docker push komalminhas1/pet-1:latest'
+                    sh 'docker push nikky1804/pro-1:latest'
                    
                     }
                 
@@ -99,14 +99,14 @@ pipeline {
             //this stage should create a container
             stage('Deploy using docker') {
             steps {
-              sh 'docker run -d --name pet1-wonder -p 8082:8082 komalminhas1/pet-1:latest'
+              sh 'docker run -d --name pet1-wonder -p 8082:8082 nikky1804/pro-1:latest'
               }
         }
         
         
         stage('Deploy to Tomcat') {
             steps {
-              sh 'cp /Users/komalminhas/.jenkins/workspace/Real-time-CICD/target/petclinic.war   /Users/komalminhas/Documents/apache-tomcat-9.0.78/webapps/'
+              sh 'cp /Users/nikky/.jenkins/workspace/Real-time-CICD/target/petclinic.war   /Users/komalminhas/Documents/apache-tomcat-9.0.78/webapps/'
               }
               
               
